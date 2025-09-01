@@ -4,5 +4,6 @@ sqlalchemy
 psycopg2-binary
 python-multipart
 pydantic
+pydantic-settings
 alembic
 aiosqlite

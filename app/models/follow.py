@@ -25,6 +25,7 @@ class Follow(Base):
         nullable=False,
         index=True,
     )
+
     followee_id: Mapped[int] = mapped_column(
         Integer,
         ForeignKey("users.id", ondelete="CASCADE"),
