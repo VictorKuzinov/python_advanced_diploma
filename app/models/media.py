@@ -35,13 +35,6 @@ class Media(Base):
     __tablename__ = "medias"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    path: Mapped[str] = mapped_column(
-        String, nullable=False
-    )  # относительный путь, например "uploads/a1b2.jpg"
-    mime: Mapped[str] = mapped_column(String(100), nullable=False)
-    uploaded_by: Mapped[int | None] = mapped_column(
-        ForeignKey("users.id", ondelete="SET NULL"), nullable=True
-    )
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
     )
