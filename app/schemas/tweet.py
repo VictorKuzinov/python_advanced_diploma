@@ -1,5 +1,5 @@
 from datetime import datetime
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 from app.schemas.user import UserPublic
 
@@ -7,9 +7,7 @@ from app.schemas.user import UserPublic
 class LikeUser(BaseModel):
     user_id: int
     name: str
-
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class TweetCreate(BaseModel):
@@ -25,9 +23,7 @@ class TweetOut(BaseModel):
     attachments: list[str]  # список относительных путей к медиа (как в ТЗ)
     author: UserPublic
     likes: list[LikeUser] = []
-
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 # Обёртки под формат ответов ТЗ

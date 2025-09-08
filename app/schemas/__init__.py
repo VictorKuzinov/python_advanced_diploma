@@ -7,16 +7,19 @@ from .tweet import (
     SimpleResult,
     TweetsResponse,
 )
+from .media import MediaUploadResponse
 
 __all__ = [
-    # users
+    # user
     "UserPublic",
     "UserProfile",
-    # tweets
+    #
     "LikeUser",
     "TweetCreate",
     "TweetOut",
     "PostTweetResponse",
     "SimpleResult",
     "TweetsResponse",
+    # media
+    "MediaUploadResponse",
 ]

@@ -14,7 +14,7 @@ def _tweet_to_dto(tweet: Tweet, *, likers: list[User] | None = None) -> TweetOut
         id=tweet.id,
         content=tweet.content,
         created_at=tweet.created_at,
-        attachments=[m.path for m in tweet.attachments],
+        attachments=[m.id for m in tweet.attachments],
         author=UserPublic.model_validate(tweet.author),
         likes=[LikeUser(user_id=u.id, name=u.username) for u in (likers or [])],
     )
