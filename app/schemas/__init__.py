@@ -1,4 +1,4 @@
-from .user import UserPublic, UserProfile
+from .user import UserPublic, UserProfile, UserProfileResponse
 from .tweet import (
     LikeUser,
     TweetCreate,
@@ -13,6 +13,7 @@ __all__ = [
     # user
     "UserPublic",
     "UserProfile",
+    "UserProfileResponse",
     #
     "LikeUser",
     "TweetCreate",

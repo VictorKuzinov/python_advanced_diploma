@@ -29,12 +29,13 @@ tweet_media = Table(
 class Media(Base):
     """
     Медиафайл:
-    храним относительный путь (по ТЗ) и mime-тип.
+    храним относительный путь (по ТЗ).
     """
 
     __tablename__ = "medias"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    path: Mapped[str] = mapped_column(String, nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
     )

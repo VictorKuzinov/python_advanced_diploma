@@ -1,6 +1,6 @@
 from .users import get_public_profile, follow, unfollow
-from .tweets import create_tweet, delete_tweet, list_tweets
-from medias import upload_media
+from .tweets import create_tweet, delete_tweet, list_tweets, list_feed_for_user
+from .medias import upload_media
 from .likes import like_tweet, unlike_tweet
 
 
@@ -13,6 +13,7 @@ __all__ = [
     "create_tweet",
     "delete_tweet",
     "list_tweets",
+    "list_feed_for_user",
     # medias
     "upload_media",
     # likes

@@ -1,7 +1,11 @@
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+from pathlib import Path
 
-from app.routes import setup_exception_handlers
-# роутеры подключим позже: from app.routes import users, tweets, media
+from app.routes import setup_exception_handlers, user_router, tweet_router, media_router
+
+
+media_dir = Path(__file__).resolve().parent / "media"
 
 
 def create_app() -> FastAPI:
@@ -13,11 +17,14 @@ def create_app() -> FastAPI:
     # глобальные обработчики ошибок
     setup_exception_handlers(app)
 
-    # здесь будут app.include_router(users.router)
-    # здесь будут app.include_router(tweets.router)
-    # здесь будут app.include_router(media.router)
+    # здесь будут роуты
+    app.include_router(user_router)
+    app.include_router(tweet_router)
+    app.include_router(media_router)
 
     return app
 
 
 app = create_app()
+
+app.mount("/media", StaticFiles(directory=media_dir), name="media")
