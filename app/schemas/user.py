@@ -8,8 +8,6 @@ class UserPublic(BaseModel):
 
 
 class UserProfile(UserPublic):
-    # id: int
-    # name: str = Field(alias="username")
     followers: list[UserPublic]
     following: list[UserPublic]
     model_config = ConfigDict(from_attributes=True)

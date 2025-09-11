@@ -14,8 +14,8 @@ MEDIA_DIR.mkdir(parents=True, exist_ok=True)
 
 
 async def upload_media(session: AsyncSession, *, file: UploadFile) -> int:
-    if not file.content_type or not file.content_type.startswith("image/"):
-        raise DomainValidation("only image/* files allowed")
+    # if not file.content_type or not file.content_type.startswith("image/"):
+    #     raise DomainValidation("only image/* files allowed")
 
     data = await file.read()
     if not data:
@@ -23,9 +23,9 @@ async def upload_media(session: AsyncSession, *, file: UploadFile) -> int:
 
     ext = Path(file.filename or "").suffix or ".jpg"
     unique_name = f"{uuid.uuid4().hex}{ext}"
-    disk_path = MEDIA_DIR / unique_name
-    with open(disk_path, "wb") as f:
-        f.write(data)
+
+    MEDIA_DIR.mkdir(parents=True, exist_ok=True)
+    (MEDIA_DIR / unique_name).write_bytes(data)
 
     media = Media(path=f"media/{unique_name}")  # <- относительный путь
     session.add(media)
