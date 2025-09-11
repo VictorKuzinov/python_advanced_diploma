@@ -10,7 +10,7 @@ from app.routes.dependencies import get_current_user  # проверка X-API-K
 router = APIRouter(prefix="/api/medias", tags=["medias"])
 
 
-@router.post("/", response_model=MediaUploadResponse)
+@router.post("", response_model=MediaUploadResponse)
 async def upload_media_endpoint(
     file: UploadFile = File(...),
     session: AsyncSession = Depends(get_session),
