@@ -10,8 +10,8 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
 
     model_config = SettingsConfigDict(
-        env_file=".env",        # читать переменные из .env
-        case_sensitive=True,    # имена переменных чувствительны к регистру
+        env_file=".env",  # читать переменные из .env
+        case_sensitive=True,  # имена переменных чувствительны к регистру
     )
 
 

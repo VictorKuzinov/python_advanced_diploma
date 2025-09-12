@@ -10,8 +10,8 @@ from app.exceptions import AlreadyExists, EntityNotFound, ForbiddenAction
 from app.models import Follow, User
 from app.schemas import UserProfile, UserPublic
 
-
 # ===== Внутренние хелперы (возвращают ORM) =====
+
 
 async def _get_user_by_api_key(session: AsyncSession, api_key: str) -> Optional[User]:
     """Вернуть пользователя по API-ключу или None (для внутреннего использования)."""
@@ -29,8 +29,10 @@ async def _get_user_by_id(session: AsyncSession, user_id: int) -> Optional[User]
 
 # ===== Публичные use-case методы (возвращают DTO/ничего) =====
 
+
 async def get_public_profile(session: AsyncSession, user_id: int) -> UserProfile:
-    """Вернуть публичный профиль {id, name, followers[], following[]} или выбросить EntityNotFound."""
+    """Вернуть публичный профиль {id, name, followers[], following[]}
+    или выбросить EntityNotFound."""
     # сам пользователь
     user = await _get_user_by_id(session, user_id)
     if not user:
@@ -63,12 +65,15 @@ async def get_public_profile(session: AsyncSession, user_id: int) -> UserProfile
 
 
 async def follow(session: AsyncSession, *, follower_id: int, followee_id: int) -> None:
-    """Оформить подписку follower_id -> followee_id (запрещаем самоподписку и дубликаты)."""
+    """Оформить подписку follower_id -> followee_id
+    (запрещаем самоподписку и дубликаты)."""
     if follower_id == followee_id:
         raise ForbiddenAction("cannot follow yourself")
 
     # оба пользователя должны существовать
-    if not await _get_user_by_id(session, follower_id) or not await _get_user_by_id(session, followee_id):
+    if not await _get_user_by_id(session, follower_id) or not await _get_user_by_id(
+        session, followee_id
+    ):
         raise EntityNotFound("user not found")
 
     session.add(Follow(follower_id=follower_id, followee_id=followee_id))

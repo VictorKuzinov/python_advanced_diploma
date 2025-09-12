@@ -1,6 +1,7 @@
 # app/tests/test_follows.py
 import pytest
 
+
 @pytest.mark.asyncio
 async def test_follow_user(client, seed_users):
     headers = {"api-key": seed_users["alice"]["api_key"]}

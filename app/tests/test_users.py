@@ -1,6 +1,7 @@
 # app/tests/test_users.py
 import pytest
 
+
 @pytest.mark.asyncio
 async def test_me_ok(client, seed_users):
     headers = {"api-key": seed_users["alice"]["api_key"]}
@@ -12,21 +13,25 @@ async def test_me_ok(client, seed_users):
     assert "followers" in data["user"]
     assert "following" in data["user"]
 
-@pytest.mark.asyncio
-async def test_me_unauthorized(client):
-    # нет api-key
-    r = await client.get("/api/users/me")
-    # должен сработать обработчик EntityNotFound/Unauthorized по твоей логике
-    assert r.status_code == 401
 
 @pytest.mark.asyncio
-async def test_me_invalid_api_key(client):
-    # несуществующий api-key
+async def test_me_unauthorized_missing_key(client):
+    # нет api-key → 401 + Missing api-key
+    r = await client.get("/api/users/me")
+    assert r.status_code == 401
+    data = r.json()
+    assert data["detail"] == "Missing api-key"
+
+
+@pytest.mark.asyncio
+async def test_me_unauthorized_invalid_key(client):
+    # неверный api-key → 401 + Invalid api-key
     headers = {"api-key": "wrong-key"}
     r = await client.get("/api/users/me", headers=headers)
     assert r.status_code == 401
     data = r.json()
-    assert data["detail"] == "Invalid or missing api-key"
+    assert data["detail"] == "Invalid api-key"
+
 
 @pytest.mark.asyncio
 async def test_get_user_by_id_ok(client, seed_users):

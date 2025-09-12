@@ -1,5 +1,5 @@
 # app/schemas/media.py
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel
 
 
 class MediaUploadResponse(BaseModel):
