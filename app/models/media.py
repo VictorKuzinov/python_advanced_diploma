@@ -1,12 +1,12 @@
 # Стандартная библиотека
 from datetime import datetime
 
+# Сторонние пакеты
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Table, func
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 # локальные пакеты
 from app.db.base import Base
-# Сторонние пакеты
-from sqlalchemy import (Column, DateTime, ForeignKey, Integer, String, Table,
-                        func)
-from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 tweet_media = Table(
     "tweet_media",
@@ -36,10 +36,6 @@ class Media(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     path: Mapped[str] = mapped_column(String, nullable=False)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now()
-    )
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
-    tweets = relationship(
-        "Tweet", secondary="tweet_media", back_populates="attachments"
-    )
+    tweets = relationship("Tweet", secondary="tweet_media", back_populates="attachments")

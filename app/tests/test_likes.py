@@ -1,6 +1,5 @@
 # app/tests/test_likes.py
 # app/tests/test_likes.py
-import io
 import pytest
 
 
@@ -17,14 +16,12 @@ async def _create_tweet(client, *, author_api_key: str, text: str) -> int:
 async def test_like_then_duplicate_returns_error(client, seed_users):
     """Поставить лайк и проверить, что повторный лайк даёт 400/409."""
     alice_api_key = seed_users["alice"]["api_key"]  # автор твита
-    bob_api_key = seed_users["bob"]["api_key"]      # ставит лайк
+    bob_api_key = seed_users["bob"]["api_key"]  # ставит лайк
 
     tweet_id = await _create_tweet(client, author_api_key=alice_api_key, text="like me")
 
     # первый лайк — ок
-    like_resp = await client.post(
-        f"/api/tweets/{tweet_id}/likes", headers={"api-key": bob_api_key}
-    )
+    like_resp = await client.post(f"/api/tweets/{tweet_id}/likes", headers={"api-key": bob_api_key})
     assert like_resp.status_code == 200
     assert like_resp.json()["result"] is True
 

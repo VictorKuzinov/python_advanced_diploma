@@ -1,18 +1,14 @@
+# Core
 -r requirements.txt
 
-# Линтеры и проверки кода
-flake8==7.0.0
-flake8-bugbear==24.4.26
-flake8-isort==6.1.1
+# Lint/format
+ruff==0.6.*
+black==25.1.0
 
-# Форматирование
-black==23.1.0
-isort==5.12.0
-
-# Статическая типизация
+# Types
 mypy==1.*
 
-# Тесты
+# Tests
 pytest
 pytest-asyncio
 httpx

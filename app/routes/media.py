@@ -3,9 +3,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.session import get_session
 from app.models import User
+from app.routes.dependencies import get_current_user  # проверка X-API-Key
 from app.schemas import MediaUploadResponse
 from app.services.medias import upload_media
-from app.routes.dependencies import get_current_user  # проверка X-API-Key
 
 router = APIRouter(prefix="/api/medias", tags=["medias"])
 

@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 
-from app.exceptions import EntityNotFound, ForbiddenAction, AlreadyExists, DomainValidation
+from app.exceptions import AlreadyExists, DomainValidation, EntityNotFound, ForbiddenAction
+
 
 def setup_exception_handlers(app: FastAPI) -> None:
     @app.exception_handler(EntityNotFound)
@@ -29,6 +30,9 @@ def setup_exception_handlers(app: FastAPI) -> None:
     async def validation_handler(_, exc: DomainValidation):
         return JSONResponse(
             status_code=400,
-            content={"result": False, "error_type": "DomainValidation",
-                     "error_message": "tweet content must be ≤ 280 characters"}
+            content={
+                "result": False,
+                "error_type": "DomainValidation",
+                "error_message": "tweet content must be ≤ 280 characters",
+            },
         )

@@ -1,12 +1,13 @@
-from alembic import context
-from sqlalchemy import pool,create_engine
-
 from logging.config import fileConfig
+
+from alembic import context
+from sqlalchemy import create_engine, pool
+
 from app.config import settings
 from app.db.base import Base
-from app import models  # noqa: F401  # важно: импорт для регистрации моделей в Base.metadata
+from app import models  # noqa: F401  # важно: импортируем модели для регистрации в Base.metadata
 
-# Alembic config
+# Alembic Config
 config = context.config
 
 # читаем URL из settings (а не из alembic.ini)
@@ -21,15 +22,18 @@ target_metadata = Base.metadata
 
 
 def run_migrations_offline() -> None:
-    url = config.get_main_option("sqlalchemy.url")
+    url_opt = config.get_main_option("sqlalchemy.url")
+    assert url_opt is not None, "sqlalchemy.url must be set in Alembic config"
+
     context.configure(
-        url=url,
+        url=url_opt,
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
         compare_type=True,
         render_as_batch=True,
     )
+
     with context.begin_transaction():
         context.run_migrations()
 
@@ -43,8 +47,11 @@ def _to_sync_url(url: str) -> str:
 
 
 def run_migrations_online() -> None:
-    # URL из конфига → переводим в синхронный вариант
-    sync_url = _to_sync_url(config.get_main_option("sqlalchemy.url"))
+    url_opt = config.get_main_option("sqlalchemy.url")
+    assert url_opt is not None, "sqlalchemy.url must be set in Alembic config"
+
+    # URL → переводим в sync-вариант
+    sync_url = _to_sync_url(url_opt)
 
     connectable = create_engine(sync_url, poolclass=pool.NullPool, future=True)
 

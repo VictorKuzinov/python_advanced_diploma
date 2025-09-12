@@ -35,7 +35,5 @@ async def unlike_tweet(session: AsyncSession, *, user_id: int, tweet_id: int) ->
     Убрать лайк с твита.
     Идемпотентно: если записи нет — не ошибка.
     """
-    await session.execute(
-        delete(Like).where(Like.user_id == user_id, Like.tweet_id == tweet_id)
-    )
+    await session.execute(delete(Like).where(Like.user_id == user_id, Like.tweet_id == tweet_id))
     await session.commit()

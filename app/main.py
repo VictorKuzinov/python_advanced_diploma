@@ -1,9 +1,9 @@
-from fastapi import FastAPI
-from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 
-from app.routes import setup_exception_handlers, user_router, tweet_router, media_router
+from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 
+from app.routes import media_router, setup_exception_handlers, tweet_router, user_router
 
 media_dir = Path(__file__).resolve().parent / "media"
 

@@ -3,16 +3,33 @@
 
 # Сторонние пакеты
 from collections.abc import AsyncGenerator
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlalchemy.orm import sessionmaker
+
+from sqlalchemy.ext.asyncio import (
+    AsyncEngine,
+    AsyncSession,
+    async_sessionmaker,
+    create_async_engine,
+)
 
 # локальные пакеты
 from app.config import settings
 
-engine = create_async_engine(settings.DATABASE_URL, echo=True)
-async_session = sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
+# создаём движок
+engine: AsyncEngine = create_async_engine(
+    settings.DATABASE_URL,
+    echo=True,
+    future=True,
+)
 
-# зависимость для FastAPI: передаёт сессию в роуты через Depends
+# создаём фабрику сессий для async
+SessionLocal = async_sessionmaker(
+    bind=engine,
+    expire_on_commit=False,
+    class_=AsyncSession,
+)
+
+
+# зависимость для FastAPI
 async def get_session() -> AsyncGenerator[AsyncSession, None]:
-    async with async_session() as session:
+    async with SessionLocal() as session:
         yield session

@@ -1,19 +1,22 @@
 # app/services/tweets.py
 # CRUD и бизнес-логика для пользователей
+from datetime import datetime
+from typing import cast
+
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from app.exceptions import DomainValidation, EntityNotFound, ForbiddenAction
-from app.models import Media, Tweet, User, Like, Follow
-from app.schemas import UserPublic, TweetOut, LikeUser
+from app.models import Follow, Like, Media, Tweet, User
+from app.schemas import LikeUser, TweetOut, UserPublic
 
 
 def _tweet_to_dto(tweet: Tweet, *, likers: list[User] | None = None) -> TweetOut:
     return TweetOut(
         id=tweet.id,
         content=tweet.content,
-        created_at=tweet.created_at,
+        created_at=cast(datetime, tweet.created_at),
         attachments=[m.path for m in tweet.attachments],
         author=UserPublic.model_validate(tweet.author),
         likes=[LikeUser(user_id=u.id, name=u.username) for u in (likers or [])],
@@ -44,10 +47,11 @@ async def create_tweet(
         raise EntityNotFound("author not found")
 
     # Проверка медиа
-    media_objs = []
+    media_objs: list[Media] = []
     if media_ids:
         media_q = select(Media).where(Media.id.in_(media_ids))
-        media_objs = (await session.execute(media_q)).scalars().all()
+        result_media = await session.execute(media_q)
+        media_objs = list(result_media.scalars().all())
         if len(media_objs) != len(set(media_ids)):
             raise EntityNotFound("one or more media not found")
 
@@ -63,9 +67,7 @@ async def create_tweet(
     return _tweet_to_dto(tweet, likers=[])
 
 
-async def delete_tweet(
-    session: AsyncSession, *, author_id: int, tweet_id: int
-) -> None:
+async def delete_tweet(session: AsyncSession, *, author_id: int, tweet_id: int) -> None:
     """
     Удалить твит (только свой).
 
@@ -74,9 +76,7 @@ async def delete_tweet(
         ForbiddenAction: попытка удалить чужой твит
     """
     tweet = (
-        await session.execute(
-            select(Tweet).where(Tweet.id == tweet_id).limit(1)
-        )
+        await session.execute(select(Tweet).where(Tweet.id == tweet_id).limit(1))
     ).scalar_one_or_none()
     if not tweet:
         raise EntityNotFound("tweet not found")

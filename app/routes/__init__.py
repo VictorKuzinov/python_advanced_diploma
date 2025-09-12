@@ -1,9 +1,9 @@
 # app/routes/__init__.py
-from .exception_handlers import setup_exception_handlers
 from .dependencies import get_current_user
-from .user import router as user_router
-from .tweet import router as tweet_router
+from .exception_handlers import setup_exception_handlers
 from .media import router as media_router
+from .tweet import router as tweet_router
+from .user import router as user_router
 
 __all__ = [
     "setup_exception_handlers",

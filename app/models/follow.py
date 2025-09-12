@@ -15,6 +15,7 @@ class Follow(Base):
     follower_id — кто подписался (читатель),
     followee_id — на кого подписался (автор).
     """
+
     __tablename__ = "follows"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -33,13 +34,9 @@ class Follow(Base):
         index=True,
     )
 
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now()
-    )
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
-    __table_args__ = (
-        UniqueConstraint("follower_id", "followee_id", name="uq_follow_pair"),
-    )
+    __table_args__ = (UniqueConstraint("follower_id", "followee_id", name="uq_follow_pair"),)
 
     # связи
     # пользователь, который подписался (читатель)

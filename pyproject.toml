@@ -1,0 +1,38 @@
+[tool.ruff]
+# Поддержка PEP8 + isort + часть flake8
+line-length = 100
+target-version = "py312"
+exclude = [
+  ".venv",
+  ".git",
+  "__pycache__",
+  "dist",
+  "build",
+  "app/media",
+]
+# Правила: базовые + isort + pyflakes и пр.
+select = ["E", "F", "W", "I"]
+# миграции обычно трогаем реже — можно смягчить
+extend-exclude = ["migrations"]
+
+[tool.black]
+line-length = 100
+target-version = ["py312"]
+exclude = '''
+/(
+  \.venv
+ |\.git
+ |__pycache__
+ |dist
+ |build
+)/
+'''
+
+[tool.mypy]
+python_version = "3.12"
+packages = ["app"]            # проверяем только пакет app
+explicit_package_bases = true # не путаем корень проекта с пакетом
+ignore_missing_imports = true # если сторонние пакеты без типов
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = false
