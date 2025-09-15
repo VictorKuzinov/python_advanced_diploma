@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Виртуальные окружения
+.venv/
+venv/
+ENV/
+env/
+
+# IDE и редакторы
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Git
+.git
+.gitignore
+
+# Логи и временные файлы
+*.log
+*.tmp
+*.bak
+
+# Тесты (внутри контейнера не нужны)
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Локальная SQLite база (в контейнере мы юзаем Postgres)
+app.db
+
+# Медиа-файлы: они должны храниться во внешнем volume, а не в образе
+app/media/
+
+# Docker
+docker-compose.override.yml
