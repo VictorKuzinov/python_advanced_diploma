@@ -2,6 +2,6 @@
 __pycache__/
 *.pyc
 .venv/
-.env
+.env.local
 app/media/
 app.db
