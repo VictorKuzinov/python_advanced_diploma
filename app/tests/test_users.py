@@ -4,6 +4,7 @@ import pytest
 FOLLOW_POST_PATH = "/api/users/{user_id}/follow"
 FOLLOW_DELETE_PATH = "/api/users/{user_id}/follow"
 
+
 @pytest.mark.asyncio
 async def test_me_ok(client, seed_users):
     headers = {"api-key": seed_users["alice"]["api_key"]}

@@ -45,8 +45,12 @@ async def test_unfollow_user(client, seed_users):
         h_bob = {"api-key": bob["api_key"]}
 
         # Bob публикует два твита
-        t1 = await client.post("/api/tweets", headers=h_bob, json={"tweet_data": "B-1", "tweet_media_ids": []})
-        t2 = await client.post("/api/tweets", headers=h_bob, json={"tweet_data": "B-2", "tweet_media_ids": []})
+        t1 = await client.post(
+            "/api/tweets", headers=h_bob, json={"tweet_data": "B-1", "tweet_media_ids": []}
+        )
+        t2 = await client.post(
+            "/api/tweets", headers=h_bob, json={"tweet_data": "B-2", "tweet_media_ids": []}
+        )
         assert t1.status_code in (200, 201) and t2.status_code in (200, 201)
         id1, id2 = t1.json()["tweet_id"], t2.json()["tweet_id"]
 
