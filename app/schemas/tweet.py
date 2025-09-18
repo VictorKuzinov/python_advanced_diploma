@@ -23,7 +23,7 @@ class TweetOut(BaseModel):
     created_at: datetime
     attachments: list[str]  # список относительных путей к медиа (как в ТЗ)
     author: UserPublic
-    likes: list[LikeUser] = []
+    likes: list[LikeUser] = Field(default_factory=list)
     model_config = ConfigDict(from_attributes=True)
 
 

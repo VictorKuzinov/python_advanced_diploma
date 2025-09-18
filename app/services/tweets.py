@@ -30,38 +30,32 @@ async def create_tweet(
     content: str,
     media_ids: list[int] | None = None,
 ) -> TweetOut:
-    """Создать новый твит с опциональными медиа."""
-
-    # Проверка текста
     text = (content or "").strip()
     if not text:
         raise DomainValidation("tweet content cannot be empty")
     if len(text) > 280:
         raise DomainValidation("tweet content must be ≤ 280 characters")
 
-    # Проверка автора
     author = (
         await session.execute(select(User).where(User.id == author_id).limit(1))
     ).scalar_one_or_none()
     if not author:
         raise EntityNotFound("author not found")
 
-    # Проверка медиа
     media_objs: list[Media] = []
-    if media_ids:
-        media_q = select(Media).where(Media.id.in_(media_ids))
-        result_media = await session.execute(media_q)
-        media_objs = list(result_media.scalars().all())
-        if len(media_objs) != len(set(media_ids)):
+    ids = list(dict.fromkeys(media_ids or []))  # уникализируем и защищаемся от None
+    if ids:
+        result = await session.execute(select(Media).where(Media.id.in_(ids)))
+        media_objs = list(result.scalars().all())
+        if len(media_objs) != len(ids):
             raise EntityNotFound("one or more media not found")
 
-    # Создание твита
     tweet = Tweet(author_id=author_id, content=text)
     if media_objs:
         tweet.attachments = list(media_objs)
 
     session.add(tweet)
-    await session.commit()
+    await session.flush()
     await session.refresh(tweet)
 
     return _tweet_to_dto(tweet, likers=[])
@@ -85,7 +79,6 @@ async def delete_tweet(session: AsyncSession, *, author_id: int, tweet_id: int) 
         raise ForbiddenAction("cannot delete another user's tweet")
 
     await session.delete(tweet)
-    await session.commit()
 
 
 async def list_tweets(session, *, author_id: int | None = None) -> list[TweetOut]:

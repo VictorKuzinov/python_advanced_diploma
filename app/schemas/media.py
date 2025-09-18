@@ -4,4 +4,4 @@ from pydantic import BaseModel
 
 class MediaUploadResponse(BaseModel):
     result: bool = True
-    media_id: int
+    media_ids: list[int]
