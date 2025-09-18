@@ -1,5 +1,4 @@
 # Стандартная библиотека
-from datetime import datetime
 
 # Сторонние пакеты
 from sqlalchemy import DateTime, ForeignKey, Integer, UniqueConstraint, func
@@ -34,7 +33,7 @@ class Follow(Base):
         index=True,
     )
 
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    created_at: Mapped[DateTime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     __table_args__ = (UniqueConstraint("follower_id", "followee_id", name="uq_follow_pair"),)
 

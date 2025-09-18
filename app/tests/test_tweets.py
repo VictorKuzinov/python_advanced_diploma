@@ -27,9 +27,9 @@ async def test_create_tweet_with_media(client, seed_users):
 
     # загружаем медиа
     png = b"\x89PNG\r\n\x1a\nfake"
-    files = {"file": ("a.png", io.BytesIO(png), "image/png")}
+    files = {"files": ("a.png", io.BytesIO(png), "image/png")}
     rm = await client.post("api/medias", headers=headers, files=files)
-    mid = rm.json()["media_id"]
+    mid = rm.json()["media_ids"][0]
 
     # создаём твит с этим медиа
     payload = {"tweet_data": "тестовый твит", "tweet_media_ids": [mid]}

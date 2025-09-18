@@ -13,7 +13,7 @@ async def get_current_user(
     api_key: Optional[str] = Header(None, alias="api-key"),
     session: AsyncSession = Depends(get_session),
 ) -> User:
-    # 1) Нет заголовка → 401 (и не зовём сервис вовсе)
+    # 1) Нет заголовка api-key → 401 (и не зовём сервис вовсе)
     if api_key is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

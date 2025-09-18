@@ -21,7 +21,7 @@ class User(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     username: Mapped[str] = mapped_column(String(100), nullable=False, unique=True, index=True)
     api_key: Mapped[str] = mapped_column(String(100), nullable=False, unique=True, index=True)
-    created_at: Mapped[str] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    created_at: Mapped[DateTime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     # Связи:
     # один пользователь много твитов
