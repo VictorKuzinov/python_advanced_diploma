@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.schemas.user import UserPublic
@@ -20,7 +18,6 @@ class TweetCreate(BaseModel):
 class TweetOut(BaseModel):
     id: int
     content: str
-    created_at: datetime
     attachments: list[str]  # список относительных путей к медиа (как в ТЗ)
     author: UserPublic
     likes: list[LikeUser] = Field(default_factory=list)

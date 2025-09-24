@@ -41,3 +41,14 @@ def setup_exception_handlers(app: FastAPI) -> None:
                 "error_message": str(exc),
             },
         )
+
+    @app.exception_handler(Exception)
+    async def generic_handler(_, exc: Exception):
+        return JSONResponse(
+            status_code=500,
+            content={
+                "result": False,
+                "error_type": "InternalError",
+                "error_message": str(exc),
+            },
+        )
