@@ -7,7 +7,11 @@ from .tweet import (
     TweetOut,
     TweetsResponse,
 )
-from .user import UserProfile, UserProfileResponse, UserPublic
+from .user import (
+    UserProfile,
+    UserProfileResponse,
+    UserPublic,
+)
 
 __all__ = [
     # user
