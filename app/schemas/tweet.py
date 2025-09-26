@@ -10,7 +10,6 @@ class LikeUser(BaseModel):
 
 
 class TweetCreate(BaseModel):
-    # тело запроса POST /api/tweets
     tweet_data: str = Field(..., min_length=1, max_length=280)
     tweet_media_ids: list[int] | None = None
 
@@ -24,7 +23,6 @@ class TweetOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-# Обёртки под формат ответов ТЗ
 class PostTweetResponse(BaseModel):
     result: bool = True
     tweet_id: int

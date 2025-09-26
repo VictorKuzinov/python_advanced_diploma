@@ -10,9 +10,8 @@ from app.exceptions import DomainValidation, EntityNotFound, ForbiddenAction
 from app.models import Follow, Like, Media, Tweet, User
 from app.schemas import LikeUser, TweetOut, UserPublic
 
+
 # -------------------- Вспомогательные функции --------------------
-
-
 def _user_public(u: User) -> UserPublic:
     # username → name через алиасы pydantic
     return UserPublic(id=u.id, username=u.username)
@@ -39,10 +38,6 @@ def _tweet_to_dto(t: Tweet, *, likers: List[User]) -> TweetOut:
 
 
 # -------------------- Публичные функции сервиса --------------------
-
-# app/services/tweets.py
-
-
 async def create_tweet(
     session: AsyncSession,
     *,
@@ -50,21 +45,21 @@ async def create_tweet(
     content: str,
     media_ids: List[int] | None = None,
 ) -> TweetOut:
-    # 1) Валидация
+    # Валидация
     text = (content or "").strip()
     if not text:
         raise DomainValidation("tweet content cannot be empty")
     if len(text) > 280:
         raise DomainValidation("tweet content must be ≤ 280 characters")
 
-    # 2) Автор
+    # Автор
     author = (
         await session.execute(select(User).where(User.id == author_id).limit(1))
     ).scalar_one_or_none()
     if not author:
         raise EntityNotFound("author not found")
 
-    # 3) Медиа
+    # Медиа
     media_objs: List[Media] = []
     ids = list(dict.fromkeys(media_ids or []))
     if ids:
@@ -73,7 +68,7 @@ async def create_tweet(
         if len(media_objs) != len(ids):
             raise EntityNotFound("one or more media not found")
 
-    # 4) Создаём твит
+    # Создаём твит
     tweet = Tweet(author_id=author_id, content=text)
     if media_objs:
         tweet.attachments = media_objs
@@ -81,10 +76,10 @@ async def create_tweet(
     session.add(tweet)
     await session.flush()  # получили tweet.id
 
-    # 5) КОНСТРУИРУЕМ DTO БЕЗ ЛЕНИВОГО ДОСТУПА:
-    #    attachments берём из media_objs (они уже в памяти),
-    #    author берём из `author` (тоже в памяти),
-    #    likes пустой список.
+    # КОНСТРУИРУЕМ DTO БЕЗ ЛЕНИВОГО ДОСТУПА:
+    # attachments берём из media_objs (они уже в памяти),
+    # author берём из `author` (тоже в памяти),
+    # likes пустой список.
     return TweetOut(
         id=tweet.id,
         content=tweet.content,
@@ -108,7 +103,6 @@ async def delete_tweet(session: AsyncSession, *, author_id: int, tweet_id: int) 
         raise ForbiddenAction("cannot delete another user's tweet")
 
     await session.delete(tweet)
-    # commit делает get_session()
 
 
 async def list_tweets(session: AsyncSession, *, author_id: int | None = None) -> List[TweetOut]:
@@ -143,19 +137,19 @@ async def list_feed_for_user(session: AsyncSession, *, viewer_id: int) -> List[T
     Лента: мои твиты + тех, на кого я подписан.
     Сортировка: по количеству лайков ↓, затем по дате ↓.
     """
-    # 1) авторы ленты
+    # авторы ленты
     followees_q = select(Follow.followee_id).where(Follow.follower_id == viewer_id)
     followee_ids = [row[0] for row in (await session.execute(followees_q)).all()]
     author_ids = followee_ids + [viewer_id] if followee_ids else [viewer_id]
 
-    # 2) агрегат лайков
+    # агрегат лайков
     likes_agg = (
         select(Like.tweet_id, func.count(Like.id).label("likes_cnt"))
         .group_by(Like.tweet_id)
         .subquery()
     )
 
-    # 3) выборка твитов + сортировка
+    # выборка твитов + сортировка
     q = (
         select(Tweet, func.coalesce(likes_agg.c.likes_cnt, 0).label("likes_cnt"))
         .where(Tweet.author_id.in_(author_ids))
@@ -175,7 +169,7 @@ async def list_feed_for_user(session: AsyncSession, *, viewer_id: int) -> List[T
     if not tweets:
         return []
 
-    # 4) лайкнувшие + DTO
+    # лайкнувшие + DTO
     dtos: List[TweetOut] = []
     for t in tweets:
         likers = await _fetch_likers(session, t.id)
