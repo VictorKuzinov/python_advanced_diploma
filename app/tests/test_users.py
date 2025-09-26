@@ -16,8 +16,6 @@ FOLLOW_DEL = "/api/users/{user_id}/follow"
 
 
 # ---------- /api/users/me ----------
-
-
 @pytest.mark.asyncio
 async def test_me_ok(client, seed_users):
     """/me возвращает профиль текущего пользователя по api-key."""
@@ -50,8 +48,6 @@ async def test_me_unauthorized_invalid_key(client):
 
 
 # ---------- /api/users/{id} ----------
-
-
 @pytest.mark.asyncio
 async def test_get_user_by_id_ok(client, seed_users):
     """GET /users/{id} возвращает профиль с followers/following."""
@@ -77,8 +73,6 @@ async def test_get_user_by_id_not_found(client, seed_users):
 
 
 # ---------- follow / unfollow ----------
-
-
 @pytest.mark.asyncio
 async def test_follow_success_and_duplicate_conflict(client, seed_users):
     """

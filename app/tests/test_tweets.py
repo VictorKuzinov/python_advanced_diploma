@@ -17,8 +17,6 @@ MEDIAS_PATH = "/api/medias"
 
 
 # --------- helpers ---------
-
-
 async def _upload_png(client, headers, name="a.png"):
     png = b"\x89PNG\r\n\x1a\nfake"
     files = {"file": (name, io.BytesIO(png), "image/png")}
@@ -33,8 +31,6 @@ async def _create_tweet(client, headers, text, media_ids=None):
 
 
 # --------- базовые сценарии ---------
-
-
 @pytest.mark.asyncio
 async def test_create_tweet_without_media_and_list(client, seed_users):
     """Создание твита без медиа и проверка появления в ленте автора."""
@@ -88,8 +84,6 @@ async def test_delete_own_tweet(client, seed_users):
 
 
 # --------- валидации ---------
-
-
 @pytest.mark.asyncio
 async def test_create_tweet_validation_empty(client, seed_users):
     """Пустой контент → 400 DomainValidation (валидация сервиса)."""
@@ -127,8 +121,6 @@ async def test_create_tweet_with_nonexistent_media_returns_not_found(client, see
 
 
 # --------- удаление: ошибки ---------
-
-
 @pytest.mark.asyncio
 async def test_delete_foreign_tweet_forbidden(client, seed_users):
     """Удаление чужого твита → 403 ForbiddenAction."""
@@ -161,8 +153,6 @@ async def test_delete_nonexistent_tweet_not_found(client, seed_users):
 
 
 # --------- сортировка ленты ---------
-
-
 @pytest.mark.asyncio
 async def test_feed_sort_by_likes_then_date(client, seed_users):
     """
@@ -194,8 +184,6 @@ async def test_feed_sort_by_likes_then_date(client, seed_users):
 
 
 # --------- attachments ---------
-
-
 @pytest.mark.asyncio
 async def test_attachments_paths_echo_back(client, seed_users):
     """PNG попадает в attachments как относительный путь 'media/<file>'."""

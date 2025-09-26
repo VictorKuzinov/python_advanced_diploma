@@ -29,7 +29,7 @@ class Follow(Base):
 
     created_at: Mapped[DateTime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
-    # ВАЖНО: уникальная пара, чтобы не было дублей подписок
+    # уникальная пара, чтобы не было дублей подписок
     __table_args__ = (UniqueConstraint("follower_id", "followee_id", name="uq_follow_pair"),)
 
     follower = relationship("User", foreign_keys=[follower_id])

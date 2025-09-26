@@ -12,7 +12,6 @@ from app.models import Media
 MEDIA_DIR = Path(__file__).resolve().parent.parent / "media"
 MEDIA_DIR.mkdir(parents=True, exist_ok=True)
 
-# при желании можно оставить пустым set(), чтобы разрешить всё
 ALLOWED_MIME = {"image/jpeg", "image/png", "image/webp", "video/mp4", "image/x-icon"}
 
 
@@ -40,7 +39,7 @@ async def upload_media(session: AsyncSession, *, file: UploadFile) -> int:
         finally:
             raise DomainValidation("empty file")
 
-    media = Media(path=f"media/{unique_name}")  # относительный путь по ТЗ
+    media = Media(path=f"media/{unique_name}")
     session.add(media)
-    await session.flush()  # получим media.id (commit делает get_session)
+    await session.flush()  # получим media.id
     return media.id
